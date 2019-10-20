@@ -141,13 +141,9 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.ProtechWindow.menuAction())
         QtWidgets.QApplication.processEvents()
         self.retranslateUi(MainWindow)
-        print("ur gay")
 
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-        # MainWindow.show()
-        # print(MainWindow.isVisible())
-        # print("Showed")
-        # running()
+
     def crap(self):
         print("crap" + str(random.randint(0, 100)))
         self.retranslateUi(MainWindow)
@@ -159,12 +155,11 @@ class Ui_MainWindow(object):
         if self.i % 20 == 0:
             self.crap()
         QtWidgets.QApplication.processEvents()
-        
+
         ser = serial.Serial("/dev/ttyACM0", 115200)
         rl = ser.readline()
 
         d = requests.get("http://34.201.116.202/checkStatus")
-        # print("1:"+d.text)
         if rl == 1:
             self.officerImage.show()
             officerLastName = "Barkingson"
@@ -175,7 +170,6 @@ class Ui_MainWindow(object):
             officerFirstName = ""
         if d.text != "False":
             danger = True
-            # print("rad bro")
             aggressorFound = True
             disabled = False
 
@@ -194,8 +188,6 @@ class Ui_MainWindow(object):
             self.aggressorsFound.hide()
             self.danger.hide()
             self.safe.show()
-
-
 
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -240,21 +232,12 @@ import ResourceOfficerImages_rc
 if __name__ == "__main__":
     import sys
     import requests
-    # import serial
-    from time import sleep
 
-    # t1 = threading.Thread(target=running(), args=())
-    # t2 = threading.Thread(target=crap(), args=())
-    # t2.start()
-    # t1.start()
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
     MainWindow.show()
-
-    # t1 = threading.Thread(target=running(), args=())
-    # t1.start()
 
     sys.exit(app.exec_())
 
