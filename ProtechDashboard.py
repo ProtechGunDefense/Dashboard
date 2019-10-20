@@ -10,6 +10,9 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import requests
 import threading
+import random
+import serial
+import time  # imports time library
 # Get values from server and change the below
 
 r = requests.get("http://34.201.116.202/checkStatus")
@@ -22,6 +25,7 @@ officerFirstName = ""
 
 
 class Ui_MainWindow(object):
+    i = 1500
 
     def setupUi(self, MainWindow):
         QtWidgets.QApplication.processEvents()
@@ -134,8 +138,6 @@ class Ui_MainWindow(object):
         self.ProtechWindow = QtWidgets.QMenu(self.menubar)
         self.ProtechWindow.setObjectName("ProtechWindow")
         MainWindow.setMenuBar(self.menubar)
-        self.actionewf = QtWidgets.QAction(MainWindow)
-        self.actionewf.setObjectName("actionewf")
         self.menubar.addAction(self.ProtechWindow.menuAction())
         QtWidgets.QApplication.processEvents()
         self.retranslateUi(MainWindow)
@@ -146,24 +148,54 @@ class Ui_MainWindow(object):
         # print(MainWindow.isVisible())
         # print("Showed")
         # running()
+    def crap(self):
+        print("crap" + str(random.randint(0, 100)))
+        self.retranslateUi(MainWindow)
+        self.i += 1000
+        sys.setrecursionlimit(self.i)
 
     def retranslateUi(self, MainWindow):
+        self.i += 1
+        if self.i % 20 == 0:
+            self.crap()
         QtWidgets.QApplication.processEvents()
+        
+        ser = serial.Serial("/dev/ttyACM0", 115200)
+        rl = ser.readline()
+
         d = requests.get("http://34.201.116.202/checkStatus")
-        print("1:"+d.text)
-        if d.text == "False":
+        # print("1:"+d.text)
+        if rl == 1:
+            self.officerImage.show()
+            officerLastName = "Barkingson"
+            officerFirstName = "Mr. George"
+        else:
+            self.officerImage.hide()
+            officerLastName = ""
+            officerFirstName = ""
+        if d.text != "False":
             danger = True
-            print("rad bro")
+            # print("rad bro")
             aggressorFound = True
             disabled = False
+
+            self.noAggressors.hide()
+            self.aggressorsFound.show()
+            self.danger.show()
+            self.safe.hide()
+
         else:
             danger = False
-            print("sad gal")
+            # print("sad gal")
             aggressorFound = False
             disabled = False
 
-        officerLastName = "Barkingson"
-        officerFirstName = "Mr. George"
+            self.noAggressors.show()
+            self.aggressorsFound.hide()
+            self.danger.hide()
+            self.safe.show()
+
+
 
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -208,7 +240,7 @@ import ResourceOfficerImages_rc
 if __name__ == "__main__":
     import sys
     import requests
-    import serial
+    # import serial
     from time import sleep
 
     # t1 = threading.Thread(target=running(), args=())
